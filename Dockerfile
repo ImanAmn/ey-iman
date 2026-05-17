@@ -1,4 +1,19 @@
-FROM python:3.11-slim
-RUN pip install pproxy
+FROM node:20-slim
+
+# نصب پایتون و pproxy
+RUN apt-get update && apt-get install -y python3 python3-pip && rm -rf /var/lib/apt/lists/*
+RUN pip3 install pproxy --break-system-packages
+
 EXPOSE 80
-CMD ["pproxy", "-l", "http://0.0.0.0:80", "--http", "/", "text/plain", "OK"]
+
+# ساخت یک مینی وب‌سرور با نودجی‌اس که روی پورت ۸۰ گوش می‌دهد، به هلت‌چک جواب می‌دهد و همزمان pproxy را ران می‌کند
+CMD node -e " \
+const http = require('http'); \
+const { exec } = require('child('child_process'); \
+exec('python3 -m pproxy -l http://0.0.0.0:80'); \
+http.createServer((req, res) => { \
+  res.writeHead(200, { 'Content-Type': 'text/plain' }); \
+  res.end('OK\n'); \
+}).listen(80, '0.0.0.0'); \
+console.log('Server and Tunnel running...'); \
+"
