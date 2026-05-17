@@ -6,10 +6,10 @@ RUN pip3 install pproxy --break-system-packages
 
 EXPOSE 80
 
-# ساخت یک مینی وب‌سرور با نودجی‌اس که روی پورت ۸۰ گوش می‌دهد، به هلت‌چک جواب می‌دهد و همزمان pproxy را ران می‌کند
+# کد اصلاح شده نودجی‌اس بدون غلط املایی
 CMD node -e " \
 const http = require('http'); \
-const { exec } = require('child('child_process'); \
+const { exec } = require('child_process'); \
 exec('python3 -m pproxy -l http://0.0.0.0:80'); \
 http.createServer((req, res) => { \
   res.writeHead(200, { 'Content-Type': 'text/plain' }); \
